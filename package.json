@@ -1,0 +1,31 @@
+{
+  "name": "projectzero",
+  "version": "1.0.0",
+  "description": "projectZero- dating app",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kaichloe/projectZero.git"
+  },
+  "author": "Kaiyip Ho",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/Kaichloe/projectZero/issues"
+  },
+  "homepage": "https://github.com/Kaichloe/projectZero#readme",
+  "devDependencies": {
+    "@babel/preset-typescript": "^7.14.5",
+    "@types/jest": "^26.0.23",
+    "jest": "^27.0.4"
+  },
+  "dependencies": {
+    "@babel/core": "^7.14.6",
+    "@babel/preset-env": "^7.14.5",
+    "babel-jest": "^27.0.2"
+  }
+}
