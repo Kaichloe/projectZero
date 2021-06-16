@@ -5,5 +5,5 @@
     "moduleResolution": "node",
     "esModuleInterop": true
   },
-  "include": ["./src/functions/*.ts"]
+  "include": ["./src/*.ts"]
 }
