@@ -1,29 +1,18 @@
-import * as AWS from '@aws-sdk/client-dynamodb';
-import { DynamoDBClient, PutItemCommand, GetItemCommand, ScanCommand} from '@aws-sdk/client-dynamodb';
-// require('dotenv').config();
-// import * as AWS from 'aws-sdk';
-// import dotenv from 'dotenv';
-// dotenv.config();
-
-// AWS.config.update({
-//   region: process.env.AWS_DEFAULT_REGION,
-//   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-//   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-// })
-const REGION = "us-east-1";
-
-// const dynamoClient = new AWS.DynamoDB.DocumentClient();
+import { DynamoDBClient, PutItemCommand, GetItemCommand, ScanCommand, DeleteItemCommand} from '@aws-sdk/client-dynamodb';
+const REGION:string = "us-east-1";
 const dynamoClient = new DynamoDBClient({region: REGION})
-const TABLE_NAME = "projectZero";
+const TABLE_NAME:string = "projectZero";
 
 export const getProfiles = async() => {
   const params = {
     TableName: TABLE_NAME
   };
-  return await dynamoClient.send(new ScanCommand(params));
+  const profiles = await dynamoClient.send(new ScanCommand(params))
+  console.log(profiles);
+  return profiles
 };
 
-const addOrUpdateProfile = async (profile) =>{
+export const addOrUpdateProfile = async (profile) =>{
   const params = {
     TableName: TABLE_NAME,
     Item: profile
@@ -31,26 +20,26 @@ const addOrUpdateProfile = async (profile) =>{
   return await dynamoClient.send(new PutItemCommand(params));
 }
 
-// const getProfileById = async(id) => {
-//   const params = {
-//     TableName: TABLE_NAME,
-//     Key: {
-//       id,
-//     }
-//   }
-//   const profile = dynamoClient.send(new GetItemCommand(params));
-//   return await profile;
-// }
+export const getProfileByName = async(id:string) => {
+  const params = {
+    TableName: TABLE_NAME,
+    Key: {
+      id: {S: id}
+    }
+  }
+  const profile = dynamoClient.send(new GetItemCommand(params));
+  return await profile;
+}
 
-// const deleteProfileById = async(id) => {
-//   const params = {
-//     TableName: TABLE_NAME,
-//     Key: {
-//       id,
-//     }
-//   }
-//   return await dynamoClient.delete(params).promise();
-// }
+export const deleteProfileById = async(id:string) => {
+  const params = {
+    TableName: TABLE_NAME,
+    Key: {
+      id: {S: id}
+    }
+  }
+  return await dynamoClient.send(new DeleteItemCommand(params));
+}
 
 const profile = {
   id: "1",
@@ -62,5 +51,6 @@ const profile = {
 
 // addOrUpdateProfile(profile);
 // deleteProfileById("1");
-getProfiles();
+// getProfiles();
+// getProfileById("1")
 
