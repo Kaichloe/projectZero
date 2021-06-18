@@ -1,7 +1,8 @@
 import { DynamoDBClient, PutItemCommand, GetItemCommand, ScanCommand, DeleteItemCommand} from '@aws-sdk/client-dynamodb';
+
 const REGION:string = "us-east-1";
 const dynamoClient = new DynamoDBClient({region: REGION})
-const TABLE_NAME:string = "projectZero";
+const TABLE_NAME:string = "databook";
 
 export const getProfiles = async() => {
   const params = {
@@ -12,45 +13,39 @@ export const getProfiles = async() => {
   return profiles
 };
 
-export const addOrUpdateProfile = async (profile) =>{
-  const params = {
+export const addOrUpdateProfile = async (user: {handle:string; age:string;email: string}) =>{
+  const body = {
     TableName: TABLE_NAME,
-    Item: profile
+    Item: {
+      handle: {S: user.handle},  
+      age: {N: user.age},
+      email: {S: user.email}
+    } 
   }
-  return await dynamoClient.send(new PutItemCommand(params));
+  return await dynamoClient.send(new PutItemCommand(body));
 }
 
-export const getProfileByName = async(id:string) => {
+export const getProfileByHandle = async(handle:string) => {
   const params = {
     TableName: TABLE_NAME,
     Key: {
-      id: {S: id}
+      handle: {S: handle}
     }
   }
   const profile = dynamoClient.send(new GetItemCommand(params));
   return await profile;
 }
 
-export const deleteProfileById = async(id:string) => {
+export const deleteProfileByHandle = async(handle:string) => {
   const params = {
     TableName: TABLE_NAME,
     Key: {
-      id: {S: id}
+      handle: {S: handle}
     }
   }
   return await dynamoClient.send(new DeleteItemCommand(params));
 }
 
-const profile = {
-  id: "1",
-  fullName: "Kaiyip Ho",
-  height: 67,
-  Gender: "Male",
-  Hobbies: ["Working out", "playing video games", "traveling"]
-}
 
-// addOrUpdateProfile(profile);
-// deleteProfileById("1");
-// getProfiles();
-// getProfileById("1")
+
 
