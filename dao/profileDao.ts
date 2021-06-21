@@ -1,29 +1,30 @@
 import { DynamoDBClient, PutItemCommand, GetItemCommand, ScanCommand, DeleteItemCommand} from '@aws-sdk/client-dynamodb';
 import IProfile from '../models/profile';
+import Profile from '../models/profile';
 
 const REGION:string = "us-east-1";
 const dynamoClient = new DynamoDBClient({region: REGION})
 const TABLE_NAME:string = "databook";
 
 export interface IProfileDao {
-  // getProfiles: () => Promise<IProfile[]>;
-  // getProfileByHandle: (handle:string) => Promise<IProfile | null >;
-  // addOrUpdateProfile: (user:IProfile) => Promise<void>;
-  // deleteProfileByEmail: (email:string) => Promise<void>;
+  getProfiles: () => Promise<IProfile[]>;
+  addOrUpdateProfile: (user:IProfile) => Promise<void>;
+  getProfileByHandle: (handle:string) => Promise<IProfile | null >;
+  deleteProfileByEmail: (email:string) => Promise<void>;
 }
 
-class ProfileDao {
+class ProfileDao implements IProfileDao{
   
-  // public async getProfiles():Promise<IProfile[]> {
-  //   const params = {
-  //     TableName: TABLE_NAME
-  //   };
+  public async getProfiles():Promise<IProfile[]> {
+    const params = {
+      TableName: TABLE_NAME
+    };
 
-  //   const profiles = await dynamoClient.send(new ScanCommand(params))
-  //   return profiles;
-  // }
+    const profiles = await dynamoClient.send(new ScanCommand(params))
+    return profiles.Items as Profile[];
+  }
 
-  public addOrUpdateProfile = async(user:{handle:string; age:string; email: string}) => {
+  public async addOrUpdateProfile(user:{handle:string; age:string; email: string}):Promise<void> {
     const {handle, age, email} = user;
     const lowerCase = handle.toLowerCase();
 
@@ -35,11 +36,10 @@ class ProfileDao {
         email: {S: email}
       } 
     }
-    const profile = await dynamoClient.send(new PutItemCommand(body));
-    return profile;
+    await dynamoClient.send(new PutItemCommand(body));
   }
 
-  public getProfileByHandle = async(handle:string) => {
+  public async getProfileByHandle(handle:string):Promise<IProfile | null > {
     const lowerCase = handle.toLowerCase();
     const params = {
       TableName: TABLE_NAME,
@@ -47,19 +47,18 @@ class ProfileDao {
         handle: {S: lowerCase}
       }
     }
-    const profile = dynamoClient.send(new GetItemCommand(params));
-    return await profile;
+    const profile = await dynamoClient.send(new GetItemCommand(params));
+    return profile.Item as Profile;
   }
 
-  public deleteProfileByEmail = async(email:string) => {
+  public async deleteProfileByEmail(email:string):Promise<void> {
     const params = {
     TableName: TABLE_NAME,
       Key: {
         email: {S: email}
       }
     }
-    const profile = await dynamoClient.send(new DeleteItemCommand(params));
-    return profile;
+    await dynamoClient.send(new DeleteItemCommand(params));
   }
 }
 
