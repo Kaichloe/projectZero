@@ -13,34 +13,37 @@ export const getProfiles = async() => {
   return profiles
 };
 
-export const addOrUpdateProfile = async (user: {handle:string; age:string;email: string}) =>{
+export const addOrUpdateProfile = async(user:{handle:string; age:string; email: string}) => {
+  const {handle, age, email} = user;
+  const lowerCase = handle.toLowerCase();
   const body = {
     TableName: TABLE_NAME,
     Item: {
-      handle: {S: user.handle},  
-      age: {N: user.age},
-      email: {S: user.email}
+      handle: {S: lowerCase},  
+      age: {N: age},
+      email: {S: email}
     } 
   }
   return await dynamoClient.send(new PutItemCommand(body));
 }
 
 export const getProfileByHandle = async(handle:string) => {
+  const lowerCase = handle.toLowerCase();
   const params = {
     TableName: TABLE_NAME,
     Key: {
-      handle: {S: handle}
+      handle: {S: lowerCase}
     }
   }
   const profile = dynamoClient.send(new GetItemCommand(params));
   return await profile;
 }
 
-export const deleteProfileByHandle = async(handle:string) => {
+export const deleteProfileByEmail = async(email:string) => {
   const params = {
     TableName: TABLE_NAME,
     Key: {
-      handle: {S: handle}
+      email: {S: email}
     }
   }
   return await dynamoClient.send(new DeleteItemCommand(params));

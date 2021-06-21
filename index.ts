@@ -1,5 +1,5 @@
 import express from 'express';
-import {getProfiles, getProfileByHandle, deleteProfileByHandle, addOrUpdateProfile} from './dynamo';
+import {getProfiles, getProfileByHandle, deleteProfileByEmail, addOrUpdateProfile} from './dynamo';
 import { Request, Response } from 'express';
 
 const app = express();
@@ -7,10 +7,6 @@ const port = process.env.port || 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
-
-app.get('/', (req, res) => {
-  res.send("Hello World, I am Kai's creation!")
-});
 
 app.get('/profiles', async(req: Request, res: Response) => {
   try {
@@ -45,10 +41,10 @@ app.post('/profiles', async(req: Request, res: Response) => {
   }
 })
 
-app.delete('/profiles/:handle', async(req: Request, res: Response) => {
+app.delete('/profiles/:email', async(req: Request, res: Response) => {
   try {
-    const { handle } = req.params
-    const profile = await deleteProfileByHandle(handle);
+    const { email } = req.params
+    const profile = await deleteProfileByEmail(email);
     res.json(profile);
     console.log("its been deleted!");
   } catch(error){
