@@ -26,16 +26,18 @@ export async function getByHandle(req: Request, res: Response){
 export async function addOrUpdateProfile(req: Request, res: Response){
   try {
     const user = await profileDao.addOrUpdateProfile(req.body)
+    res.json("You were successful!")
     res.json(user);
   } catch(error){
     res.status(500).json({err:"something went wrong"})
   }
 }
 
-export async function deleteProfileByEmail(req: Request, res: Response){
+export async function deleteProfileByHandle(req: Request, res: Response){
   try {
-    const { email } = req.params
-    const profile = await profileDao.deleteProfileByEmail(email);
+    const { handle } = req.params
+    const profile = await profileDao.deleteProfileByHandle(handle);
+    res.json(`${handle}'s profile was successfully deleted`)
     res.json(profile);
   } catch(error){
     res.status(500).json({err:"something went wrong"})

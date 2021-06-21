@@ -10,7 +10,7 @@ export interface IProfileDao {
   getProfiles: () => Promise<IProfile[]>;
   addOrUpdateProfile: (user:IProfile) => Promise<void>;
   getProfileByHandle: (handle:string) => Promise<IProfile | null >;
-  deleteProfileByEmail: (email:string) => Promise<void>;
+  deleteProfileByHandle: (handle:string) => Promise<void>;
 }
 
 class ProfileDao implements IProfileDao{
@@ -20,8 +20,14 @@ class ProfileDao implements IProfileDao{
       TableName: TABLE_NAME
     };
 
-    const profiles = await dynamoClient.send(new ScanCommand(params))
-    return profiles.Items as Profile[];
+    const profiles = await dynamoClient.send(new ScanCommand(params));
+    let filteredProfiles = [];
+
+    for(const values of profiles.Items){
+      filteredProfiles.push(values.email.S);
+    }
+
+    return filteredProfiles as Profile[];
   }
 
   public async addOrUpdateProfile(user:{handle:string; age:string; email: string}):Promise<void> {
@@ -51,11 +57,11 @@ class ProfileDao implements IProfileDao{
     return profile.Item as Profile;
   }
 
-  public async deleteProfileByEmail(email:string):Promise<void> {
+  public async deleteProfileByHandle(handle:string):Promise<void> {
     const params = {
     TableName: TABLE_NAME,
       Key: {
-        email: {S: email}
+        handle: {S: handle},
       }
     }
     await dynamoClient.send(new DeleteItemCommand(params));
