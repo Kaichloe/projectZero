@@ -1,9 +1,11 @@
 import express from 'express';
 import {getProfiles, getProfileByHandle, deleteProfileByEmail, addOrUpdateProfile} from './dynamo';
+import ProfileDao from './dao/profileDao';
 import { Request, Response } from 'express';
 
 const app = express();
 const port = process.env.port || 3000;
+const profileDao = new ProfileDao();
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -21,8 +23,9 @@ app.get('/profiles', async(req: Request, res: Response) => {
 app.get('/profiles/:handle', async(req: Request, res: Response) => {
   try {
     const { handle } = req.params
-    const profile = await getProfileByHandle(handle);
-    res.json(profile);
+    const profile = await profileDao.getProfileByHandle(handle)
+    res.status(200).json(profile);
+    console.log("this works!")
   } catch(error){
     console.error(error);
     res.status(500).json({err:"something went wrong"})

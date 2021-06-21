@@ -11,7 +11,7 @@ class Profile implements IProfile {
   public age: string;
   public email: string;
 
-  constructor(handle, age, email){
+  constructor(handle:string, age:string, email:string){
     this.handle = handle;
     this.age = age;
     this.email = email;

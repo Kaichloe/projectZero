@@ -1,5 +1,5 @@
 import { DynamoDBClient, PutItemCommand, GetItemCommand, ScanCommand, DeleteItemCommand} from '@aws-sdk/client-dynamodb';
-
+import IProfile from './models/profile';
 const REGION:string = "us-east-1";
 const dynamoClient = new DynamoDBClient({region: REGION})
 const TABLE_NAME:string = "databook";
