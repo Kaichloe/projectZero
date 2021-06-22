@@ -3,7 +3,6 @@ import {GetCommand, UpdateCommand, PutCommand, DeleteCommand} from '@aws-sdk/lib
 import Post from '../models/post';
 import IPost from '../models/post';
 
-
 const TABLE_NAME:string = "postbook";
 
 export interface IPostDao {
@@ -21,12 +20,11 @@ class PostDao implements IPostDao{
         handle: handle
       },
     };
-    const data = await ddbDocClient.send(new GetCommand(params))
-    console.log(data.Item);
+    const data = await ddbDocClient.send(new GetCommand(params));
     return data.Item as Post;    
   }
 
-  public async addPost(post:IPost):Promise<void> {
+  // public async addPost(post:IPost):Promise<void> {
     // const {handle, email} = post;
     // let { body } = post;
     // const get = {
@@ -62,22 +60,22 @@ class PostDao implements IPostDao{
     //   }
     // }
     // await ddbDocClient.send(new PutCommand(params));
-  }
+  // }
   
   public async updatePost(post:IPost):Promise<void> {
-    // const {handle, body} = post;
+    const {handle, body} = post;
 
-    // const params = {
-    //   TableName: TABLE_NAME,
-    //   Key: {
-    //     handle: handle
-    //   },
-    //   UpdateExpression: 'set body = :l',
-    //   ExpressionsAttributeValues: {
-    //     ':l': body
-    //   }
-    // }
-    // await ddbDocClient.send(new UpdateCommand(params));
+    const params = {
+      TableName: TABLE_NAME,
+      Key: {
+        handle: handle
+      },
+      UpdateExpression: 'set body = :l',
+      ExpressionsAttributeValues: {
+        ':l': body
+      }
+    }
+    await ddbDocClient.send(new UpdateCommand(params));
   }
 
 }

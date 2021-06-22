@@ -14,14 +14,18 @@ export async function getPostsByHandle(req: Request, res: Response){
   }
 }
 
-export async function addPost(req: Request, res: Response){
-  try {
-    const post = await postDao.addPost(req.body)
-    res.json("You were successful!")
-  } catch(error){
-    res.status(500).json({err:"something went wrong"})
-  }
-}
+// export async function addPost(req: Request, res: Response){
+//   try {
+//     const post = await postDao.addPost(req.body)
+//     res.json("You were successful!")
+//     res.json(post);
+//   } catch(error){
+//     res.status(500).json({err:"something went wrong"})
+//   }
+// }
+
+
+
 
 
 

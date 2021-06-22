@@ -1,6 +1,6 @@
 import {Router} from 'express';
 import {getAllProfiles, addOrUpdateProfile, getByHandle, deleteProfileByHandle} from './profiles'
-import {addPost, getPostsByHandle} from './post';
+import {getPostsByHandle} from './post';
 
 //Profile-route
 const profileRouter = Router();
@@ -12,7 +12,7 @@ profileRouter.delete('/:handle', deleteProfileByHandle);
 //Post-route
 const postRouter = Router();
 postRouter.get('/:handle', getPostsByHandle);
-postRouter.post('/', addPost);
+// postRouter.post('/', addPost);
 // postRouter.put('/',updatePost);
 
 

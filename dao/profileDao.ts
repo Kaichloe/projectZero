@@ -21,14 +21,13 @@ class ProfileDao implements IProfileDao{
     };
 
     const profiles = await dynamoClient.send(new ScanCommand(params));
-    // let filteredProfiles = [];
+    let filteredProfiles = [];
 
-    // for(const values of profiles.Items){
-    //   filteredProfiles.push(values.email.S);
-    // }
+    for(const values of profiles.Items){
+      filteredProfiles.push(values.email.S);
+    }
 
-    // return filteredProfiles as Profile[];
-    return profiles.Items as Profile[];
+    return filteredProfiles as Profile[];
   }
 
   public async addOrUpdateProfile(user:IProfile):Promise<void> {
