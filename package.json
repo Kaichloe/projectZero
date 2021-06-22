@@ -19,6 +19,8 @@
   },
   "homepage": "https://github.com/Kaichloe/projectZero#readme",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.18.0",
+    "@aws-sdk/lib-dynamodb": "^3.18.0",
     "@babel/core": "^7.14.6",
     "@babel/preset-env": "^7.14.5",
     "@types/jest": "^26.0.23",
