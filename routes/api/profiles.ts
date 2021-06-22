@@ -17,7 +17,7 @@ export async function getByHandle(req: Request, res: Response){
   try {
     const { handle } = req.params
     const profile = await profileDao.getProfileByHandle(handle)
-    res.status(200).json(profile);
+    profile !== undefined ? res.status(200).json(profile) : res.json(`${handle} does not exist`);
   } catch(error){
     res.status(500).json({err:"something went wrong"})
   }
@@ -37,7 +37,7 @@ export async function deleteProfileByHandle(req: Request, res: Response){
   try {
     const { handle } = req.params
     const profile = await profileDao.deleteProfileByHandle(handle);
-    res.json(`${handle}'s profile was successfully deleted`)
+    res.json(`${handle}'s profile was successfully deleted`);
     res.json(profile);
   } catch(error){
     res.status(500).json({err:"something went wrong"})
