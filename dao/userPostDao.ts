@@ -29,7 +29,7 @@ class UserPostDao implements IUserPostDao{
       },
     };
     const data = await ddbDocClient.send(new GetCommand(params));
-    // console.log(data)
+    
     return data.Item as UserPost;    
   }
 
@@ -67,9 +67,9 @@ class UserPostDao implements IUserPostDao{
     }
 
     const oldData = await ddbDocClient.send(new GetCommand(input));
-    // console.log(oldData);
+
     const update:string[] = oldData.Item.post.concat(post);
-    // console.log(update);
+    
     const params = {
       TableName: TABLE_NAME,
       Item: {
