@@ -3,16 +3,27 @@ import ProfileDao from '../../dao/profileDao';
 
 const profileDao =new ProfileDao();
 
+/**
+ * api route that calls function to get all profiles but only shows emails
+ * @param req 
+ * @param res 
+ */
 export async function getAllProfiles(req: Request, res: Response){
   try {
     const profiles = await profileDao.getProfiles();
-    res.json(profiles);
+    res.status(200).json(profiles);
   } catch(error){
     console.error(error);
     res.status(500).json({err:"something went wrong"})
   }
 } 
 
+/**
+ * api route that calls function to get profile by handle
+ * if not found will return custom response 
+ * @param req 
+ * @param res 
+ */
 export async function getByHandle(req: Request, res: Response){
   try {
     const { handle } = req.params
@@ -23,22 +34,39 @@ export async function getByHandle(req: Request, res: Response){
   }
 }
 
+/**
+ * api route that calls function to add or update existing profile
+ * will check for age validation 
+ * @param req 
+ * @param res 
+ * @returns 
+ */
 export async function addOrUpdateProfile(req: Request, res: Response){
   try {
+    const {age} = req.body;
+    if (Number(age) < 13){
+      return res.json("You must be 13 years of age to join FakeBook. Sorry");
+    }
     const user = await profileDao.addOrUpdateProfile(req.body)
-    res.json("You were successful!")
-    res.json(user);
+    res.status(200).json("You were successful!")
+    res.status(200).json(user);
   } catch(error){
     res.status(500).json({err:"something went wrong"})
   }
 }
 
+/**
+ * api route that calls function to delete profile
+ * by handle from the database
+ * @param req 
+ * @param res 
+ */
 export async function deleteProfileByHandle(req: Request, res: Response){
   try {
     const { handle } = req.params
     const profile = await profileDao.deleteProfileByHandle(handle);
-    res.json(`${handle}'s profile was successfully deleted`);
-    res.json(profile);
+    res.status(200).json(`${handle}'s profile was successfully deleted`);
+    res.status(200).json(profile);
   } catch(error){
     res.status(500).json({err:"something went wrong"})
   }

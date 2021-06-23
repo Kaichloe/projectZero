@@ -14,7 +14,10 @@ export interface IProfileDao {
 }
 
 class ProfileDao implements IProfileDao{
-  
+  /**
+   * Will get all profiles but filtered to show only their emails
+   * @returns 
+   */
   public async getProfiles():Promise<IProfile[]> {
     const params = {
       TableName: TABLE_NAME
@@ -30,6 +33,10 @@ class ProfileDao implements IProfileDao{
     return filteredProfiles as Profile[];
   }
 
+  /**
+   * Will add or update profile based on given params. Will make sure handle is all lowerCased
+   * @param user 
+   */
   public async addOrUpdateProfile(user:IProfile):Promise<void> {
     const {handle, age, email} = user;
     const lowerCase = handle.toLowerCase();
@@ -45,6 +52,11 @@ class ProfileDao implements IProfileDao{
     await dynamoClient.send(new PutItemCommand(body));
   }
 
+  /**
+   * Will get profile based on handle. Will show handle, email and age
+   * @param handle 
+   * @returns 
+   */
   public async getProfileByHandle(handle:string):Promise<IProfile | null > {
     const lowerCase = handle.toLowerCase();
     const params = {
@@ -57,11 +69,17 @@ class ProfileDao implements IProfileDao{
     return profile.Item as Profile;
   }
 
+  /**
+   * will delete profile by handle 
+   * from the database
+   * @param handle 
+   */
   public async deleteProfileByHandle(handle:string):Promise<void> {
+    const toLower = handle.toLowerCase();
     const params = {
     TableName: TABLE_NAME,
       Key: {
-        handle: {S: handle},
+        handle: {S: toLower},
       }
     }
     await dynamoClient.send(new DeleteItemCommand(params));

@@ -1,16 +1,16 @@
 //Defining Post interface 
-export interface IPost {
+export interface IUserPost {
   handle?: string;
   email?: string;
-  body?: string[];
+  post?: string[];
 }
 
-class Post implements IPost {
+class UserPost implements IUserPost {
   constructor(
     public handle?: string,
     public email?: string,
-    public body?: string[]
+    public post?: string[]
   ){}
 }
 
-export default Post;
+export default UserPost;
